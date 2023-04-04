@@ -30,7 +30,7 @@ flutter run
 - Une fois l'application lancée, vous pouvez rechercher un produit en tapant son nom dans la barre de recherche.
 - Une fois la recherche fini, une liste de produit correspondant à votre recherche s'affiche.
 - Vous pouvez ensuite cliquer sur un produit pour voir ses informations, il s'enregistre alors dans l'historique.
-- Vous pouvez ensuite aller dans l'historique pour voir les produits que vous avez recherché.
+- Vous pouvez ensuite aller sur la page d'accueil pour voir l'historique qui comprend les produits que vous avez recherché.
 
 ## Version
 
