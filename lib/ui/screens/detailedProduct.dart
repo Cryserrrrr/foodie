@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:food_projet/repositories/getProductByCode.dart';
 
 class DetailedProduct extends StatefulWidget {
   final String? code;
@@ -17,7 +16,6 @@ class _DetailedProductState extends State<DetailedProduct> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: FutureBuilder<Map<String, dynamic>>(
         future: fetchProduct(code),
         builder: (context, snapshot) {
@@ -26,43 +24,60 @@ class _DetailedProductState extends State<DetailedProduct> {
             return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  Container(
-                    height: 200,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          product['image_url'] ?? '',
+                  Stack(
+                    children: [
+                      Container(
+                        height: 400,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              product['image_url'] ?? '',
+                            ),
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                        fit: BoxFit.cover,
                       ),
-                    ),
+                      Positioned(
+                        top: 16,
+                        left: 16,
+                        child: IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          iconSize: 40,
+                          color: Colors.red,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 20.0),
                   Container(
-                    padding: EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      product['product_name'] ?? 'No product name',
-                      style: TextStyle(
+                      product['product_name'] ?? 'Ce produit n\'a pas de nom',
+                      style: const TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      product['brands'] ?? "No brand",
-                      style: TextStyle(
+                      product['brands'] ?? "Ce produit n'a pas de marque",
+                      style: const TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      product['quantity'] ?? "No quantity",
-                      style: TextStyle(
+                      product['quantity'] ?? "Ce produit n'a pas de quantité",
+                      style: const TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                       ),
@@ -73,7 +88,7 @@ class _DetailedProductState extends State<DetailedProduct> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           'Nutriscore: ',
                           style: TextStyle(
                             fontSize: 20.0,
@@ -81,8 +96,9 @@ class _DetailedProductState extends State<DetailedProduct> {
                           ),
                         ),
                         Text(
-                          product['nutriscore_grade'].toUpperCase() ??
-                              "No nutriscore",
+                          product['nutriscore_grade']
+                              ? product['nutriscore_grade'].toUpperCase()
+                              : "Ce produit n'a pas de nutriscore",
                           style: TextStyle(
                             fontSize: 20.0,
                             fontWeight: FontWeight.bold,
@@ -90,7 +106,7 @@ class _DetailedProductState extends State<DetailedProduct> {
                                 product['nutriscore_grade']),
                           ),
                         ),
-                        SizedBox(width: 10.0),
+                        const SizedBox(width: 10.0),
                         Icon(
                           product['nutriscore_grade'] == 'a'
                               ? Icons.arrow_circle_up_rounded
@@ -112,57 +128,57 @@ class _DetailedProductState extends State<DetailedProduct> {
                   ),
                   if (showNutritionFact)
                     Container(
-                      padding: EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(10.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Nutrition Facts:',
+                          const Text(
+                            'Plus de détails:',
                             style: TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 10.0),
+                          const SizedBox(height: 10.0),
                           Text(
-                            'Energy: ${product['nutriments']['energy']}',
-                            style: TextStyle(
+                            'Energie: ${product['nutriments']['energy']}',
+                            style: const TextStyle(
                               fontSize: 18.0,
                             ),
                           ),
                           Text(
-                            'Fat: ${product['nutriments']['fat']}',
-                            style: TextStyle(
+                            'Graisse: ${product['nutriments']['fat']}',
+                            style: const TextStyle(
                               fontSize: 18.0,
                             ),
                           ),
                           Text(
-                            'Saturated Fat: ${product['nutriments']['saturated-fat']}',
-                            style: TextStyle(
+                            'Graisse Saturé: ${product['nutriments']['saturated-fat']}',
+                            style: const TextStyle(
                               fontSize: 18.0,
                             ),
                           ),
                           Text(
-                            'Carbohydrates: ${product['nutriments']['carbohydrates']}',
-                            style: TextStyle(
+                            'Glucides: ${product['nutriments']['carbohydrates']}',
+                            style: const TextStyle(
                               fontSize: 18.0,
                             ),
                           ),
                           Text(
-                            'Sugars: ${product['nutriments']['sugars']}',
-                            style: TextStyle(
+                            'Sucres: ${product['nutriments']['sugars']}',
+                            style: const TextStyle(
                               fontSize: 18.0,
                             ),
                           ),
                           Text(
-                            'Proteins: ${product['nutriments']['proteins']}',
-                            style: TextStyle(
+                            'Proteines: ${product['nutriments']['proteins']}',
+                            style: const TextStyle(
                               fontSize: 18.0,
                             ),
                           ),
                           Text(
-                            'Salt: ${product['nutriments']['salt']}',
-                            style: TextStyle(
+                            'Sel: ${product['nutriments']['salt']}',
+                            style: const TextStyle(
                               fontSize: 18.0,
                             ),
                           ),
@@ -170,8 +186,14 @@ class _DetailedProductState extends State<DetailedProduct> {
                       ),
                     ),
                   Container(
-                    padding: EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
                       onPressed: () {
                         setState(() {
                           showNutritionFact = !showNutritionFact;
@@ -179,7 +201,7 @@ class _DetailedProductState extends State<DetailedProduct> {
                       },
                       child: Text(
                         showNutritionFact ? 'Hide Details' : 'More Details',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
                         ),
@@ -224,17 +246,5 @@ Color _getNutriscoreColor(String? nutriscore) {
       return Colors.red;
     default:
       return Colors.black;
-  }
-}
-
-Future<Map<String, dynamic>> fetchProduct(String? code) async {
-  final response = await http.get(
-      Uri.parse('https://world.openfoodfacts.org/api/v0/product/$code.json'));
-
-  if (response.statusCode == 200) {
-    var jsonResponse = jsonDecode(response.body);
-    return jsonResponse['product'];
-  } else {
-    throw Exception('Failed to load product');
   }
 }

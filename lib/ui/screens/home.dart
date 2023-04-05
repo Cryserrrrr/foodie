@@ -31,91 +31,88 @@ class _HomeState extends State<Home> {
                 [
                   {"product_name": "No history yet"}
                 ];
-            return Column(
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(10.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search for a food item',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
+            return Column(children: <Widget>[
+              Container(
+                padding: const EdgeInsets.all(10.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search for a food item',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                    onTap: () async {
-                      bool result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              SearchProduct(prefs: snapshot.data),
-                        ),
-                      );
-                      if (result) {
-                        setState(() {});
-                      }
-                    },
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 10.0),
-                  child: Column(
-                    children: <Widget>[
-                      const Text(
-                        'Search history',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  onTap: () async {
+                    bool result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            SearchProduct(prefs: snapshot.data),
                       ),
-                      const SizedBox(height: 10),
-                      for (int i = 0; i < prefs.length; i++)
-                        TextButton(
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                            side: MaterialStateProperty.all(
-                              const BorderSide(
-                                color: Colors.black,
-                                width: 1.0,
-                              ),
-                            ),
-                          ),
-                          onPressed: () async {
-                            if (json.decode(prefs[i])['product_name'] ==
-                                "No history yet") {
-                              return;
-                            }
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DetailedProduct(
-                                  int.parse(json.decode(prefs[i])['code'])
-                                      .toString(),
-                                ),
-                              ),
-                            );
-                            var temp = prefs[i];
-                            prefs.removeAt(i);
-                            prefs.insert(0, temp.toString());
-                            snapshot.data.setStringList('historyList', prefs);
-                            setState(() {});
-                          },
-                          child: Text(
-                            json.decode(prefs[i])['product_name'],
-                            style: const TextStyle(
-                              fontSize: 15.0,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
+                    );
+                    if (result) {
+                      setState(() {});
+                    }
+                  },
                 ),
-              ],
-            );
+              ),
+              SizedBox(height: 20),
+              Text('History',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red[600]),
+                  textAlign: TextAlign.center),
+              SizedBox(height: 20),
+              Expanded(
+                  child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 10.0),
+                      child: ListView.separated(
+                          itemBuilder: (context, index) {
+                            ;
+                            return Card(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal:
+                                        MediaQuery.of(context).size.width *
+                                            0.05),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: ListTile(
+                                    onTap: () {
+                                      if (json.decode(
+                                              prefs[index])['product_name'] ==
+                                          "No history yet") {
+                                      } else {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                DetailedProduct(
+                                              int.parse(json.decode(
+                                                      prefs[index])['code'])
+                                                  .toString(),
+                                            ),
+                                          ),
+                                        );
+                                        String temp = prefs[index];
+                                        prefs.removeAt(index);
+                                        prefs.insert(0, temp.toString());
+                                        snapshot.data.setStringList(
+                                            'historyList', prefs);
+                                        setState(() {});
+                                      }
+                                    },
+                                    title: Center(
+                                        child: Text(json.decode(
+                                            prefs[index])['product_name']))));
+                          },
+                          separatorBuilder: (context, index) {
+                            return const SizedBox(
+                              height: 12,
+                            );
+                          },
+                          itemCount: prefs.length > 10 ? prefs.length : 10))),
+            ]);
           } else {
             return Text("Loading...");
           }

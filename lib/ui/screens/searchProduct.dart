@@ -1,45 +1,23 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'detailedProduct.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import '../../models/product.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:food_projet/repositories/getProducts.dart';
+import 'dart:convert';
 
 class SearchProduct extends StatefulWidget {
   final SharedPreferences? prefs;
   const SearchProduct({Key? key, this.prefs}) : super(key: key);
+  final bool fetching = false;
 
   @override
   SearchProductState createState() => SearchProductState();
 }
 
-// Request open food facts API to get products with the name in the search bar
-//Request is limited at 20 products and return only name and image and code of the product
-Future<dynamic> fetchProducts(name) async {
-  final response = await http.get(Uri.parse(
-      'https://fr.openfoodfacts.org/cgi/search.pl?search_terms=$name&search_simple=1&action=process&json=1&page_size=20&fields=product_name,image_small_url,code'));
-  if (response.statusCode == 200) {
-    List jsonResponse = json.decode(response.body)['products'];
-    //if product name is empty, remove it from the list
-    jsonResponse
-        .map((product) => Product(product['product_name'],
-            product['image_small_url'], product['code']))
-        .toList();
-    jsonResponse.removeWhere((element) =>
-        element['product_name'] == '' || element['product_name'] == null);
-    jsonResponse.removeWhere((element) =>
-        element['image_small_url'] == '' || element['image_small_url'] == null);
-    return jsonResponse;
-  } else {
-    throw Exception('Failed to load products');
-  }
-}
-
 class SearchProductState extends State<SearchProduct> {
   List products = [];
   get history => widget.prefs;
+  bool fetching = false;
 
   @override
   Widget build(BuildContext context) {
@@ -68,20 +46,28 @@ class SearchProductState extends State<SearchProduct> {
               ),
               autofocus: true,
               onSubmitted: (value) async {
+                setState(() {
+                  fetching = true;
+                });
                 products = await fetchProducts(value);
                 setState(() {
                   products = products;
+                  fetching = false;
                 });
               },
             ),
           ),
           Expanded(
             child: FutureBuilder(
-              future: fetchProducts(''),
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
+                if (fetching) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (products.isNotEmpty) {
                   return GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: 0.9,
                     ),
@@ -142,7 +128,9 @@ class SearchProductState extends State<SearchProduct> {
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
                 }
-                return CircularProgressIndicator();
+                return const Center(
+                  child: Text('Veuillez entrer un produit à rechercher'),
+                );
               },
             ),
           ),
