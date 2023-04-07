@@ -23,7 +23,7 @@ class SearchProductState extends State<SearchProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Food Project'),
+        title: const Text('Food Project'),
         centerTitle: true,
         backgroundColor: Colors.red[600],
         leading: IconButton(
@@ -36,7 +36,7 @@ class SearchProductState extends State<SearchProduct> {
       body: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(10.0),
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Search for a product',
@@ -108,12 +108,12 @@ class SearchProductState extends State<SearchProduct> {
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 //center the text
                                 child: Text(
                                   products[index]['product_name'],
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16.0,
                                   ),

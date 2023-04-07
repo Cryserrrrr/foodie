@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'searchProduct.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,17 +54,17 @@ class _HomeState extends State<Home> {
                   },
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text('History',
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.red[600]),
                   textAlign: TextAlign.center),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Expanded(
                   child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 10.0),
+                      margin: const EdgeInsets.symmetric(vertical: 10.0),
                       child: ListView.separated(
                           itemBuilder: (context, index) {
                             ;
@@ -114,7 +113,7 @@ class _HomeState extends State<Home> {
                           itemCount: prefs.length > 10 ? prefs.length : 10))),
             ]);
           } else {
-            return Text("Loading...");
+            return const Text("Loading...");
           }
         },
       ),

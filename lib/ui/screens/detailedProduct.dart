@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:food_projet/repositories/getProductByCode.dart';
 
@@ -6,6 +7,7 @@ class DetailedProduct extends StatefulWidget {
   const DetailedProduct(this.code, {super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _DetailedProductState createState() => _DetailedProductState();
 }
 
@@ -84,7 +86,7 @@ class _DetailedProductState extends State<DetailedProduct> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
